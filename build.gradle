@@ -1,0 +1,54 @@
+plugins {
+    id 'org.springframework.boot' version '2.3.3.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+    id 'java'
+    id 'au.com.dius.pact' version '4.1.0'
+}
+
+group 'org.example'
+version '1.0-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+repositories {
+    maven {
+        url = uri('https://artifactory.glovoint.com/artifactory/gradle-release')
+        credentials {
+            username = project.findProperty('artifactory_user').toString()
+            password = project.findProperty('artifactory_key').toString()
+        }
+    }
+    jcenter();
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.13'
+    implementation group: 'org.json', name: 'json', version: '20201115'
+    testImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: '4.1.0'
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+
+task providerTest(type: Test) {
+    //systemProperties['pact.rootDir'] = "$buildDir/pacts"
+    systemProperties['pactbroker.host'] = "localhost:8113"
+    systemProperties['pact.verifier.publishResults'] = 'true'
+//    systemProperties['pact.verification.ignoreIoErrors:false'] = 'true'
+    useJUnitPlatform()
+}
+
+pactVerify.dependsOn(providerTest)
+pact {
+    if ('pactVerify' in gradle.startParameter.taskNames) {
+        serviceProviders {
+            BusService {
+                protocol = 'http'
+                host = 'localhost'
+                port = 8083
+                hasPactsFromPactBroker("http://pact_broker_app:80")
+                stateChangeUrl = url('http://localhost:8083')
+                providerTag = 'test'
+            }
+        }
+    }
+}
