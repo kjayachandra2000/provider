@@ -47,7 +47,6 @@ pact {
                 port = 8083
                 hasPactsFromPactBroker("http://pact_broker_app:80")
                 stateChangeUrl = url('http://localhost:8083')
-                providerTag = 'test'
             }
         }
     }
