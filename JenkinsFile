@@ -14,9 +14,9 @@ pipeline {
                 sh "./gradlew clean test"
             }
         }
-        stage("Publish") {
+        stage("Pact Verify") {
             steps {
-                sh "./gradlew pactPublish"
+                sh "./gradlew pactVerify"
             }
         }
         stage("Can-I-Deploy") {
