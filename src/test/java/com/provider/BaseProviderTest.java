@@ -14,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @Provider("BusService")
-@PactBroker(host = "localhost", port = "80")
+@PactBroker(host = "pact_broker_app", port = "80")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseProviderTest {
 
