@@ -24,30 +24,53 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation group: 'org.apache.httpcomponents', name: 'fluent-hc', version: '4.5.13'
     implementation group: 'org.json', name: 'json', version: '20201115'
-    testImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: '4.1.0'
+    testImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: '4.1.11'
     testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
-
 task providerTest(type: Test) {
-    //systemProperties['pact.rootDir'] = "$buildDir/pacts"
-    systemProperties['pactbroker.host'] = "localhost:8113"
-    systemProperties['pact.verifier.publishResults'] = 'true'
-//    systemProperties['pact.verification.ignoreIoErrors:false'] = 'true'
     useJUnitPlatform()
 }
 
-pactVerify.dependsOn(providerTest)
-pact {
-    if ('pactVerify' in gradle.startParameter.taskNames) {
-        serviceProviders {
-            BusService {
-                protocol = 'http'
-                host = 'localhost'
-                port = 8083
-                hasPactsFromPactBroker("http://pact_broker_app:80")
-                stateChangeUrl = url('http://localhost:8083')
-            }
-        }
-    }
-}
+//pact{
+//    broker {
+//        pactBrokerUrl = 'http://localhost:80'
+////        // To use basic auth
+////        pactBrokerUsername = '<USERNAME>'
+////        pactBrokerPassword = '<PASSWORD>'
+//    }
+//    serviceProviders {
+//        BusService { // Define the name of your provider here
+//            fromPactBroker {
+//                selectors = latestTags('test') // specify your tags here. You can leave this out to just use the latest pacts
+//            }
+//        }
+//    }
+//    reports {
+//        defaultReports() // adds the standard console output
+//        markdown // report in markdown format
+//        json // report in json format
+//    }
+//}
+//pactVerify.dependsOn(providerTest)
+//pact {
+//    if ('pactVerify' in gradle.startParameter.taskNames) {
+//        serviceProviders {
+//            BusService {
+////                protocol = 'http'
+////                host = 'localhost'
+////                port = 8083
+//                hasPactsFromPactBroker("http://localhost:80")
+////                stateChangeUrl = url('http://localhost:80/tasks/pactStateChange')
+//            }
+//        }
+////        broker {
+////            pactBrokerUrl = "http://localhost:80"
+////        }
+//        reports {
+//            defaultReports() // adds the standard console output
+//            markdown // report in markdown format
+//            json // report in json format
+//        }
+//    }
+//}

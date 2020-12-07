@@ -4,6 +4,7 @@ import au.com.dius.pact.provider.junit5.HttpTestTarget;
 import au.com.dius.pact.provider.junit5.PactVerificationContext;
 import au.com.dius.pact.provider.junit5.PactVerificationInvocationContextProvider;
 import au.com.dius.pact.provider.junitsupport.Provider;
+import au.com.dius.pact.provider.junitsupport.State;
 import au.com.dius.pact.provider.junitsupport.loader.PactBroker;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 
 @Provider("BusService")
-@PactBroker
+@PactBroker(host = "localhost", port = "80")
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class BaseProviderTest {
 
@@ -34,5 +35,13 @@ public class BaseProviderTest {
     @ExtendWith(PactVerificationInvocationContextProvider.class)
     void pactVerificationTestTemplate(PactVerificationContext context) {
         context.verifyInteraction();
+    }
+
+    @State("There is a bus with number 613 arriving to Hammersmith bus station")
+    public void toDefaultState() {
+    }
+
+    @State("With missing node in the response body")
+    public void toDefaultNNState() {
     }
 }
